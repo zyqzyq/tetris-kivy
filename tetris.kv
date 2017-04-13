@@ -1,0 +1,276 @@
+<Button>:
+	border:0,0,0,0
+<MainScreen>:
+    name: 'main'
+	canvas.before:
+        Color:
+            rgba: .2, .2, .2, 1 # your color here
+        Rectangle:
+			source:'data/start.png'
+            size: root.size
+    Button:
+		background_color:0,66,255,.5
+        size_hint: None, .10
+        width: self.height * 2
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        on_release: root.manager.start_tetris()
+        text: 'Start'
+
+<TetrisScreen>:
+    name: 'tetris'
+    tetris: tetris
+	left_button:left_button
+	right_button:right_button
+	up_button:up_button
+	down_button:down_button
+    canvas.before:
+        Color:
+            rgba: 1., 1., 1., 1 # your color here
+        Rectangle:
+			source:'data/play.png'
+            size: root.size
+	AnchorLayout:
+        anchor_x:"left"
+        anchor_y:"bottom"
+		StackLayout:
+            orientation:"lr-bt"
+			size_hint: .7, 1
+			#width: self.height * 0.5
+			Tetris:
+				id: tetris
+				shape: 20, 10
+				size_hint: 1, 1
+				#width: self.height * 0.5
+				#pos_hint: {'x': .10, 'y': 0}
+				on_game_over: root.manager.current = 'main'
+			
+	AnchorLayout:
+        anchor_x:"right"
+        anchor_y:"top"
+        StackLayout:
+            orientation:"lr-tb"
+            size_hint: .3, 1  
+			Tetris_piece:
+				id: tetris_piece
+				piece_num:tetris.piece_num
+				shape:4,4
+				size_hint: 1, None
+				height: self.width 
+				#pos_hint: {'top': .97, 'right': .97}
+
+			Label:
+				id: points
+				size_hint: 1, .10
+				#pos_hint: {'top': .77, 'right': .97}
+				canvas.before:
+					Color:
+						rgba: .0, .0, .0, .5 # your color here
+					Rectangle:
+						size: root.size
+				text: 'score: '+str(tetris.points)
+			StackLayout:
+				id:direction
+				opacity: 1
+				orientation:"lr-bt"
+                size_hint: 1, .5
+				Label:
+                    size_hint:.25,.2
+				Button:
+					size_hint:.5,.2
+					#text:'down_fast'
+					background_normal:'data/down_fast.png'
+					background_down:'data/down_fast.png'
+					on_press:tetris.move(0, 0) if direction.opacity==1. else None
+					#on_touch_down:tetris.create_clock(*args)
+					#on_touch_up:tetris.delete_clock(*args)
+				Label:
+                    size_hint:.25,.2
+				Label:
+                    size_hint:.25,.2
+				Button:
+					size_hint:.5,.2
+					id:down_button
+					#text:'down'
+					background_normal:'data/down.png'
+					background_down:'data/down.png'
+					on_press:tetris.move(0, -1) if direction.opacity==1. else None
+				Label:
+                    size_hint:.25,.2
+				Button:
+					size_hint:.5,.2
+					id:left_button
+					#text:'left'
+					background_normal:'data/left.png'
+					background_down:'data/left.png'
+					on_press:tetris.move(-1, 0) if direction.opacity==1. else None
+				
+				Button:
+					size_hint:.5,.2
+					#text:'right'
+					id:right_button
+					background_normal:'data/right.png'
+					background_down:'data/right.png'
+					on_press:tetris.move(1, 0) if direction.opacity==1. else None
+				Label:
+                    size_hint:.33,.2
+				Button:
+					size_hint:.33,.2
+					id:up_button
+					#text:'up'
+					background_normal:'data/up.png'
+					background_down:'data/up.png'
+					on_press:tetris.move(0, 1) if direction.opacity==1. else None
+				Label:
+                    size_hint:.33,.2
+
+<Tetris>:
+    canvas.before:
+        Color:
+            rgba: .0, .0, .0, .8 # your color here
+        Rectangle:
+            size: root.size
+
+<Tetris_piece>:
+    canvas.before:
+        Color:
+            rgba: .0, .0, .0, .8 # your color here
+        Rectangle:
+            size: root.size
+<Brick>:
+    source: 'data/block.png'
+
+<Piece>:
+    row: 19
+    column: 5
+    brick_0: brick_0
+    Brick:
+        id: brick_0
+        pos_hint: {'x': 0, 'y': 0}
+        color: root.color
+
+<IPiece>:
+    color: .5, .5, .5, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': -1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': 2, 'y': 0}
+        color: root.color
+
+<LPiece>:
+    color: .5, .5, 1, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': -1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': -1, 'y': -1}
+        color: root.color
+
+<JPiece>:
+    color: .5, 1, .5, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': -1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': 1, 'y': -1}
+        color: root.color
+
+<TPiece>:
+    color: .5, 1, 1, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': -1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': 0, 'y': -1}
+        color: root.color
+
+<SPiece>:
+    color: 1, .5, .5, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': 1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 0, 'y': -1}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': -1, 'y': -1}
+        color: root.color
+
+<ZPiece>:
+    color: 1, .5, 1, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': -1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 0, 'y': -1}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': 1, 'y': -1}
+        color: root.color
+
+<OPiece>:
+    color: 1, 1, .5, 1
+    brick_a: brick_a
+    brick_b: brick_b
+    brick_c: brick_c
+    Brick:
+        id: brick_a
+        pos_hint: {'x': -1, 'y': 0}
+        color: root.color
+    Brick:
+        id: brick_b
+        pos_hint: {'x': 0, 'y': -1}
+        color: root.color
+    Brick:
+        id: brick_c
+        pos_hint: {'x': -1, 'y': -1}
+        color: root.color
+
